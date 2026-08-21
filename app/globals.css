@@ -1,0 +1,68 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-surface text-ink dark:bg-surface-dark dark:text-ink-dark antialiased;
+    font-feature-settings: "cv11", "ss01";
+  }
+
+  :focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+
+  ::selection {
+    background-color: #2563eb;
+    color: white;
+  }
+}
+
+@layer utilities {
+  .container-px {
+    @apply px-6 md:px-10 lg:px-16;
+  }
+
+  .btn-ripple {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-ripple::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(circle, rgb(255 255 255 / 0.5) 0%, transparent 70%);
+    opacity: 0;
+    transform: scale(0);
+    pointer-events: none;
+  }
+
+  .btn-ripple:active::after {
+    animation: ripple 500ms ease-out;
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
