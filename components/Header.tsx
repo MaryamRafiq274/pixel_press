@@ -43,7 +43,7 @@ export default function Header() {
             <Layers className="h-5 w-5" strokeWidth={2.4} />
           </span>
           <span className="text-lg font-bold tracking-tight text-ink dark:text-ink-dark">
-            PixelPress
+            minifyme
           </span>
         </a>
 
