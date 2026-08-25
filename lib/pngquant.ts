@@ -56,7 +56,7 @@ export async function compressPNG(
     if (process.platform === "win32") {
       pngquantPath = path.join(
         pngquantVendorPath,
-        "pngquant.exe"
+        "pngquant"
       );
     } else if (
       process.platform === "linux"
