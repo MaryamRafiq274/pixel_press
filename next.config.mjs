@@ -5,6 +5,8 @@ const nextConfig = {
     serverComponentsExternalPackages: [
       "archiver",
       "@neplex/vectorizer",
+      "pngquant-bin",
+      "execa",
     ],
   },
 };

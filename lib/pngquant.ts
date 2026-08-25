@@ -24,25 +24,12 @@ export async function compressPNG(
   );
 
   try {
-    // =====================================================
-    // Write temporary PNG
-    // =====================================================
-
     await fs.writeFile(
       inputPath,
       buffer
     );
 
-    console.log(
-      "PNG input:",
-      (buffer.length / 1024).toFixed(2),
-      "KB"
-    );
-
-    // =====================================================
-    // Determine PNGQuant binary
-    // =====================================================
-
+    // Find the PNGQuant executable manually
     const pngquantVendorPath =
       path.join(
         process.cwd(),
@@ -51,30 +38,42 @@ export async function compressPNG(
         "vendor"
       );
 
-    let pngquantPath: string;
+    const possiblePaths = [
+      path.join(
+        pngquantVendorPath,
+        "pngquant"
+      ),
 
-    if (process.platform === "win32") {
-      pngquantPath = path.join(
+      path.join(
         pngquantVendorPath,
-        "pngquant"
-      );
-    } else if (
-      process.platform === "linux"
+        "pngquant.exe"
+      ),
+    ];
+
+    let pngquantPath = "";
+
+    for (
+      const possiblePath of possiblePaths
     ) {
-      pngquantPath = path.join(
-        pngquantVendorPath,
-        "pngquant"
-      );
-    } else if (
-      process.platform === "darwin"
-    ) {
-      pngquantPath = path.join(
-        pngquantVendorPath,
-        "pngquant"
-      );
-    } else {
+      try {
+        await fs.access(
+          possiblePath
+        );
+
+        pngquantPath =
+          possiblePath;
+
+        break;
+      } catch {
+        // Continue checking
+      }
+    }
+
+    if (!pngquantPath) {
       throw new Error(
-        `Unsupported operating system: ${process.platform}`
+        `PNGQuant executable not found. Checked: ${possiblePaths.join(
+          ", "
+        )}`
       );
     }
 
@@ -88,27 +87,7 @@ export async function compressPNG(
       pngquantPath
     );
 
-    // =====================================================
-    // Verify executable exists
-    // =====================================================
-
-    const exists =
-      await fs
-        .access(pngquantPath)
-        .then(() => true)
-        .catch(() => false);
-
-    if (!exists) {
-      throw new Error(
-        `PNGQuant executable not found: ${pngquantPath}`
-      );
-    }
-
-    // =====================================================
-    // Run PNGQuant
-    // =====================================================
-
-    const result = await execa(
+    await execa(
       pngquantPath,
       [
         "--quality=40-70",
@@ -118,104 +97,26 @@ export async function compressPNG(
         "--output",
         outputPath,
         inputPath,
-      ],
-      {
-        reject: true,
-      }
+      ]
     );
-
-    console.log(
-      "PNGQuant stdout:",
-      result.stdout
-    );
-
-    console.log(
-      "PNGQuant stderr:",
-      result.stderr
-    );
-
-    // =====================================================
-    // Check output
-    // =====================================================
-
-    const outputExists =
-      await fs
-        .access(outputPath)
-        .then(() => true)
-        .catch(() => false);
-
-    if (!outputExists) {
-      throw new Error(
-        "PNGQuant did not create output file."
-      );
-    }
-
-    // =====================================================
-    // Read compressed PNG
-    // =====================================================
 
     const compressedBuffer =
       await fs.readFile(
         outputPath
       );
 
-    console.log(
-      "PNGQuant output:",
-      (
-        compressedBuffer.length /
-        1024
-      ).toFixed(2),
-      "KB"
-    );
-
-    // =====================================================
-    // Keep smaller file
-    // =====================================================
-
     if (
       compressedBuffer.length <
       buffer.length
     ) {
-      console.log(
-        "Using PNGQuant compressed PNG."
-      );
-
       return compressedBuffer;
     }
 
-    console.log(
-      "PNGQuant did not reduce size. Using original."
-    );
-
     return buffer;
-
   } catch (error: any) {
-
     console.error(
-      "========================================"
-    );
-
-    console.error(
-      "PNGQUANT ERROR"
-    );
-
-    console.error(
-      "Platform:",
-      process.platform
-    );
-
-    console.error(
-      "Message:",
+      "PNGQuant compression error:",
       error?.message
-    );
-
-    console.error(
-      "Stack:",
-      error?.stack
-    );
-
-    console.error(
-      "========================================"
     );
 
     throw new Error(
@@ -224,13 +125,7 @@ export async function compressPNG(
         "Unknown error"
       }`
     );
-
   } finally {
-
-    // =====================================================
-    // Cleanup
-    // =====================================================
-
     await fs
       .unlink(inputPath)
       .catch(() => {});
