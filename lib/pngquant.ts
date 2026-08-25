@@ -29,7 +29,6 @@ export async function compressPNG(
       buffer
     );
 
-    // Find the PNGQuant executable manually
     const pngquantVendorPath =
       path.join(
         process.cwd(),
@@ -38,17 +37,28 @@ export async function compressPNG(
         "vendor"
       );
 
-    const possiblePaths = [
-      path.join(
-        pngquantVendorPath,
-        "pngquant"
-      ),
-
-      path.join(
-        pngquantVendorPath,
-        "pngquant.exe"
-      ),
-    ];
+    const possiblePaths =
+      process.platform === "win32"
+        ? [
+          path.join(
+            pngquantVendorPath,
+            "pngquant.exe"
+          ),
+          path.join(
+            pngquantVendorPath,
+            "pngquant"
+          ),
+        ]
+        : [
+          path.join(
+            pngquantVendorPath,
+            "pngquant"
+          ),
+          path.join(
+            pngquantVendorPath,
+            "pngquant.exe"
+          ),
+        ];
 
     let pngquantPath = "";
 
@@ -65,15 +75,50 @@ export async function compressPNG(
 
         break;
       } catch {
-        // Continue checking
+        // Try next path
       }
     }
 
+    console.log(
+      "========================================"
+    );
+
+    console.log(
+      "PNGQUANT DEBUG"
+    );
+
+    console.log(
+      "Platform:",
+      process.platform
+    );
+
+    console.log(
+      "Working directory:",
+      process.cwd()
+    );
+
+    console.log(
+      "Vendor directory:",
+      pngquantVendorPath
+    );
+
+    console.log(
+      "Checked paths:",
+      possiblePaths
+    );
+
+    console.log(
+      "Found executable:",
+      pngquantPath || "NOT FOUND"
+    );
+
+    console.log(
+      "========================================"
+    );
+
     if (!pngquantPath) {
       throw new Error(
-        `PNGQuant executable not found. Checked: ${possiblePaths.join(
-          ", "
-        )}`
+        `PNGQuant executable not found on ${process.platform}.`
       );
     }
 
@@ -120,18 +165,17 @@ export async function compressPNG(
     );
 
     throw new Error(
-      `PNGQuant compression failed: ${
-        error?.message ||
-        "Unknown error"
+      `PNGQuant compression failed: ${error?.message ||
+      "Unknown error"
       }`
     );
   } finally {
     await fs
       .unlink(inputPath)
-      .catch(() => {});
+      .catch(() => { });
 
     await fs
       .unlink(outputPath)
-      .catch(() => {});
+      .catch(() => { });
   }
 }

@@ -2,6 +2,12 @@
 
 const nextConfig = {
   experimental: {
+    outputFileTracingIncludes: {
+      "/api/compress": [
+        "./node_modules/pngquant-bin/vendor/**",
+      ],
+    },
+
     serverComponentsExternalPackages: [
       "archiver",
       "@neplex/vectorizer",
