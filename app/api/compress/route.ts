@@ -4,6 +4,7 @@ import {
 } from "next/server";
 
 import sharp from "sharp";
+import { compressSVG } from "@/lib/svgo";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -170,25 +171,24 @@ export async function POST(
       // ============================================
 
       else if (
-        file.type ===
-        "image/svg+xml"
-      ) {
-        console.log(
-          "SVG received:",
-          file.name
-        );
+  file.type ===
+  "image/svg+xml"
+) {
+  console.log(
+    "Compressing SVG:",
+    file.name
+  );
 
-        // Keep original for now.
-        // SVG optimization should use SVGO.
+  outputBuffer =
+    await compressSVG(
+      inputBuffer
+    );
 
-        outputBuffer =
-          inputBuffer;
+  extension = "svg";
 
-        extension = "svg";
-
-        mime =
-          "image/svg+xml";
-      }
+  mime =
+    "image/svg+xml";
+}
 
       // ============================================
       // Unsupported
