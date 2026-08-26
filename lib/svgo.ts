@@ -8,6 +8,9 @@ export async function compressSVG(
       throw new Error("Empty SVG buffer");
     }
 
+    console.log("================================");
+    console.log("SVG COMPRESSION STARTED");
+
     console.log(
       "SVG input:",
       (buffer.length / 1024).toFixed(2),
@@ -31,7 +34,9 @@ export async function compressSVG(
           },
         },
 
-        "removeDimensions",
+        {
+          name: "removeDimensions",
+        },
       ],
     });
 
@@ -48,42 +53,31 @@ export async function compressSVG(
       "KB"
     );
 
-    // Never return a larger SVG
     if (
       compressedBuffer.length <
       buffer.length
     ) {
       console.log(
-        "Using optimized SVG."
+        "SVG compression successful"
       );
 
       return compressedBuffer;
     }
 
     console.log(
-      "SVG optimization did not reduce size. Using original."
+      "Compressed SVG is not smaller. Keeping original."
     );
 
     return buffer;
 
   } catch (error: any) {
-    console.error(
-      "================================"
-    );
+    console.error("================================");
+    console.error("SVG COMPRESSION ERROR");
+    console.error("Message:", error?.message);
+    console.error("Stack:", error?.stack);
+    console.error("================================");
 
-    console.error(
-      "SVG COMPRESSION ERROR"
-    );
-
-    console.error(
-      error?.message
-    );
-
-    console.error(
-      "================================"
-    );
-
-    // Do not crash the entire compression API
+    // Return original SVG instead of crashing API
     return buffer;
   }
 }

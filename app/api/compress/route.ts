@@ -170,9 +170,9 @@ export async function POST(
       // SVG
       // ============================================
 
-      else if (
-  file.type ===
-  "image/svg+xml"
+else if (
+  file.type === "image/svg+xml" ||
+  file.name.toLowerCase().endsWith(".svg")
 ) {
   console.log(
     "Compressing SVG:",

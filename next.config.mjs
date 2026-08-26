@@ -12,6 +12,7 @@ const nextConfig = {
       "archiver",
       "@neplex/vectorizer",
       "pngquant-bin",
+      "svgo",
       "execa",
     ],
   },
