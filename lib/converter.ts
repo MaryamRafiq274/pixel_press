@@ -537,16 +537,36 @@ switch (inputFormat) {
       "KB"
     );
 
-return {
-  buffer:
-    convertedPNG,
+    const optimizedPNG =
+      await compressPNG(
+        convertedPNG
+      );
 
-  mime:
-    "image/png",
+    console.log(
+      "After pngquant:",
+      (
+        optimizedPNG.length /
+        1024
+      ).toFixed(2),
+      "KB"
+    );
 
-  extension:
-    "png",
-};
+    const finalPNG =
+      optimizedPNG.length <
+      convertedPNG.length
+        ? optimizedPNG
+        : convertedPNG;
+
+    return {
+      buffer:
+        finalPNG,
+
+      mime:
+        "image/png",
+
+      extension:
+        "png",
+    };
   }
 
   // ===================================================
