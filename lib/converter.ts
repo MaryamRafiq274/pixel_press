@@ -513,41 +513,41 @@ switch (inputFormat) {
   //
   // ===================================================
 
-  if (
-    targetFormat === "png"
-  ) {
-    console.log(
-      "Converting → PNG"
-    );
+ if (
+  targetFormat === "png"
+) {
+  console.log(
+    "Converting → PNG"
+  );
 
-    const convertedPNG =
-      await image
-        .png({
-          compressionLevel: 9,
-          adaptiveFiltering: true,
-        })
-        .toBuffer();
+  const convertedPNG =
+    await image
+      .png({
+        compressionLevel: 9,
+        adaptiveFiltering: true,
+      })
+      .toBuffer();
 
-    console.log(
-      "After Sharp PNG:",
-      (
-        convertedPNG.length /
-        1024
-      ).toFixed(2),
-      "KB"
-    );
+  console.log(
+    "Final Sharp PNG:",
+    (
+      convertedPNG.length /
+      1024
+    ).toFixed(2),
+    "KB"
+  );
 
-return {
-  buffer:
-    convertedPNG,
+  return {
+    buffer:
+      convertedPNG,
 
-  mime:
-    "image/png",
+    mime:
+      "image/png",
 
-  extension:
-    "png",
-};
-  }
+    extension:
+      "png",
+  };
+}
 
   // ===================================================
   // JPG / JPEG
