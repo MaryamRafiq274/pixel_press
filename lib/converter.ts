@@ -1,7 +1,6 @@
 import sharp from "sharp";
 
 import { compressPNG } from "@/lib/pngquant";
-import { optimizeJPEG } from "@/lib/jpegoptim";
 import { compressSVG } from "@/lib/svgo";
 
 type ConvertFormat =
@@ -580,9 +579,7 @@ switch (inputFormat) {
   // ↓
   // Sharp
   // ↓
-  // JPEG
-  // ↓
-  // JPEGoptim
+  // JPEG (mozjpeg)
   //
   // ===================================================
 
@@ -617,7 +614,7 @@ switch (inputFormat) {
         .toBuffer();
 
     console.log(
-      "After Sharp JPEG:",
+      "Final JPEG (Sharp/mozjpeg):",
       (
         convertedJPEG.length /
         1024
@@ -625,29 +622,9 @@ switch (inputFormat) {
       "KB"
     );
 
-    const optimizedJPEG =
-      await optimizeJPEG(
-        convertedJPEG
-      );
-
-    console.log(
-      "After JPEGoptim:",
-      (
-        optimizedJPEG.length /
-        1024
-      ).toFixed(2),
-      "KB"
-    );
-
-    const finalJPEG =
-      optimizedJPEG.length <
-      convertedJPEG.length
-        ? optimizedJPEG
-        : convertedJPEG;
-
     return {
       buffer:
-        finalJPEG,
+        convertedJPEG,
 
       mime:
         "image/jpeg",
