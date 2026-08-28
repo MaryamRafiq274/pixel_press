@@ -6,7 +6,7 @@ import { ChevronDown } from "lucide-react";
 
 const FAQS = [
   {
-    question: "Is minifyme really free to use?",
+    question: "Is Minifyme really free to use?",
     answer:
       "Yes. Core compression, resizing, and conversion tools are free with no account required. Advanced batch and API features are available on paid plans.",
   },
@@ -26,7 +26,7 @@ const FAQS = [
       "Our algorithm targets the smallest file size at a quality level that's visually indistinguishable from the original for nearly all use cases.",
   },
   {
-    question: "Can I use minifyme in my own app?",
+    question: "Can I use Minifyme in my own app?",
     answer:
       "Yes — a developer API is available so you can integrate compression, resizing, and conversion directly into your own product or pipeline.",
   },

@@ -66,7 +66,7 @@ export default function Footer() {
               </span>
 
               <span className="text-lg font-bold text-ink dark:text-ink-dark">
-                minifyme
+                Minifyme
               </span>
             </Link>
 
@@ -121,7 +121,7 @@ export default function Footer() {
 
         {/* Bottom Footer */}
         <div className="mt-12 flex flex-col items-center justify-between gap-3 border-t border-line pt-6 text-xs text-muted dark:border-line-dark dark:text-muted-dark sm:flex-row">
-          <p>© {new Date().getFullYear()} minifyme. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} Minifyme. All rights reserved.</p>
 
           <p>Built for bloggers, developers, designers &amp; creators.</p>
         </div>

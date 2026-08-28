@@ -10,7 +10,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "minifyme — Compress Images Without Losing Quality",
+  title: "Minifyme — Compress Images Without Losing Quality",
   description:
     "Compress, resize, convert, and optimize images in seconds. No registration required. Batch processing. Privacy-first image tools for developers, designers, and creators.",
   keywords: [
@@ -22,14 +22,14 @@ export const metadata: Metadata = {
     "batch image compression",
   ],
   openGraph: {
-    title: "minifyme — Compress Images Without Losing Quality",
+    title: "Minifyme — Compress Images Without Losing Quality",
     description:
       "Compress, resize, convert, and optimize images in seconds. No registration required.",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "minifyme — Compress Images Without Losing Quality",
+    title: "Minifyme — Compress Images Without Losing Quality",
     description:
       "Compress, resize, convert, and optimize images in seconds. No registration required.",
   },

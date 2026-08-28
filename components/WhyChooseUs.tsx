@@ -33,7 +33,7 @@ export default function WhyChooseUs() {
           className="mx-auto max-w-2xl text-center"
         >
           <h2 className="text-section-sm text-ink dark:text-ink-dark md:text-section">
-            Why creators choose minifyme
+            Why creators choose Minifyme
           </h2>
         </motion.div>
 
