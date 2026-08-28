@@ -5,6 +5,7 @@ import {
 
 import sharp from "sharp";
 import { compressSVG } from "@/lib/svgo";
+import { compressPNG } from "@/lib/pngquant";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -54,7 +55,7 @@ export async function POST(
       let mime: string;
 
       // ============================================
-      // PNG
+      // PNG (pngquant engine, sharp as fallback)
       // ============================================
 
       if (
@@ -66,13 +67,25 @@ export async function POST(
           file.name
         );
 
-        outputBuffer =
-          await sharp(inputBuffer)
-            .png({
-              compressionLevel: 9,
-              adaptiveFiltering: true,
-            })
-            .toBuffer();
+        try {
+          outputBuffer =
+            await compressPNG(
+              inputBuffer
+            );
+        } catch (pngquantError: any) {
+          console.error(
+            "pngquant failed, falling back to sharp:",
+            pngquantError?.message
+          );
+
+          outputBuffer =
+            await sharp(inputBuffer)
+              .png({
+                compressionLevel: 9,
+                adaptiveFiltering: true,
+              })
+              .toBuffer();
+        }
 
         extension = "png";
 
@@ -86,9 +99,9 @@ export async function POST(
 
       else if (
         file.type ===
-          "image/jpeg" ||
+        "image/jpeg" ||
         file.type ===
-          "image/jpg"
+        "image/jpg"
       ) {
         console.log(
           "Compressing JPG:",
@@ -170,25 +183,25 @@ export async function POST(
       // SVG
       // ============================================
 
-else if (
-  file.type === "image/svg+xml" ||
-  file.name.toLowerCase().endsWith(".svg")
-) {
-  console.log(
-    "Compressing SVG:",
-    file.name
-  );
+      else if (
+        file.type === "image/svg+xml" ||
+        file.name.toLowerCase().endsWith(".svg")
+      ) {
+        console.log(
+          "Compressing SVG:",
+          file.name
+        );
 
-  outputBuffer =
-    await compressSVG(
-      inputBuffer
-    );
+        outputBuffer =
+          await compressSVG(
+            inputBuffer
+          );
 
-  extension = "svg";
+        extension = "svg";
 
-  mime =
-    "image/svg+xml";
-}
+        mime =
+          "image/svg+xml";
+      }
 
       // ============================================
       // Unsupported
@@ -199,9 +212,8 @@ else if (
           {
             success: false,
             message:
-              `Unsupported image type: ${
-                file.type ||
-                "unknown"
+              `Unsupported image type: ${file.type ||
+              "unknown"
               }`,
           },
           {
@@ -240,15 +252,15 @@ else if (
       const saved =
         originalSize > 0
           ? (
+            (
               (
-                (
-                  originalSize -
-                  compressedSize
-                ) /
-                originalSize
-              ) *
-              100
-            ).toFixed(2)
+                originalSize -
+                compressedSize
+              ) /
+              originalSize
+            ) *
+            100
+          ).toFixed(2)
           : "0";
 
       // ============================================
